@@ -2,9 +2,9 @@
 
 namespace ActiveCollab\Quickbooks\Tests;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class TestCase extends PHPUnit_Framework_TestCase
+class TestWithFixture extends TestCase
 {
     /**
      * Get fixture for test mocking
@@ -25,6 +25,4 @@ class TestCase extends PHPUnit_Framework_TestCase
     {
         $this->assertTrue(is_array($data), 'Not array');
     }
-
-
 }

@@ -9,7 +9,7 @@ use ActiveCollab\Quickbooks\Data\ConnectionResponse;
 use League\OAuth1\Client\Credentials\TokenCredentials;
 use League\OAuth1\Client\Credentials\ClientCredentials;
 
-class QuickbooksTest extends TestCase
+class QuickbooksTest extends TestWithFixture
 {
     /**
      * @var Quickbooks
@@ -19,7 +19,7 @@ class QuickbooksTest extends TestCase
     /**
      * Set up test environment
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -33,7 +33,7 @@ class QuickbooksTest extends TestCase
     /**
      * Tear down test environment
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->server = null;
 

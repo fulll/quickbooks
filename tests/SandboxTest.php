@@ -4,7 +4,7 @@ namespace ActiveCollab\Quickbooks\Tests;
 
 use ActiveCollab\Quickbooks\Sandbox;
 
-class SandboxTest extends TestCase
+class SandboxTest extends TestWithFixture
 {
     /**
      * @var Sandbox
@@ -14,7 +14,7 @@ class SandboxTest extends TestCase
     /**
      * Set up test environment
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -32,7 +32,7 @@ class SandboxTest extends TestCase
     /**
      * Tear down test environement
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->sandbox = null;
 

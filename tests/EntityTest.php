@@ -4,7 +4,7 @@ namespace ActiveCollab\Quickbooks\Tests;
 
 use ActiveCollab\Quickbooks\Data\Entity;
 
-class EntityTest extends TestCase
+class EntityTest extends TestWithFixture
 {
     /**
      * @var Entity
@@ -14,7 +14,7 @@ class EntityTest extends TestCase
     /**
      * Set up test environment
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -26,7 +26,7 @@ class EntityTest extends TestCase
     /**
      * Tear down test environment
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->entity = null;
 

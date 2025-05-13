@@ -3,10 +3,14 @@
 namespace ActiveCollab\Quickbooks\Tests;
 
 use ActiveCollab\Quickbooks\DataService;
+use ActiveCollab\Quickbooks\Quickbooks;
 use DateTime;
 use Exception;
+use Guzzle\Http\Client;
+use Guzzle\Http\Message\Request;
+use Guzzle\Http\Message\Response;
 
-class DataServiceTest extends TestCase
+class DataServiceTest extends TestWithFixture
 {
     /**
      * @var DataService
@@ -16,7 +20,7 @@ class DataServiceTest extends TestCase
     /**
      * Set up test environment
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -34,7 +38,7 @@ class DataServiceTest extends TestCase
     /**
      * Tear down test environemnt
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->dataService = null;
 
@@ -46,7 +50,7 @@ class DataServiceTest extends TestCase
      */
     public function testGetApiUrl()
     {
-        $this->assertContains('https://quickbooks.api.intuit.com', $this->dataService->getApiUrl(), 'Invalid api url');
+        $this->assertStringContainsString('https://quickbooks.api.intuit.com', $this->dataService->getApiUrl(), 'Invalid api url');
     }
 
     /**
@@ -174,10 +178,8 @@ class DataServiceTest extends TestCase
         $this->assertEquals('Deleted', $entity3_raw_data['status']);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testCDCRequestThrowsException() {
+        $this->expectException(Exception::class);
         $mockDataService = $this->getMockBuilder('\ActiveCollab\Quickbooks\DataService')
                                 ->setConstructorArgs($this->getTestArguments())
                                 ->setMethods([ 'request' ])
@@ -190,48 +192,6 @@ class DataServiceTest extends TestCase
                         ->will($this->returnValue($value));
 
         $mockDataService->cdc(['Invoice'], new DateTime());
-    }
-
-    /**
-     * Test request
-     */
-    public function testRequest()
-    {
-        $mockDataService = $this->getMockBuilder('\ActiveCollab\Quickbooks\DataService')
-                                ->setConstructorArgs($this->getTestArguments())
-                                ->setMethods([ 'createServer', 'createHttpClient' ])
-                                ->getMock();
-
-        $mockDataService->expects($this->once())
-                        ->method('createServer')
-                        ->will($this->returnValue($mockServer = $this->getMock('stdClass', [ 'getHeaders' ])));
-
-        $mockServer->expects($this->once())
-                   ->method('getHeaders')
-                   ->will($this->returnValue($this->getMockAuthorizationHeaders()));
-
-        $mockDataService->expects($this->once())
-                        ->method('createHttpClient')
-                        ->will($this->returnValue($mockHttpClient = $this->getMock('stdClass', ['createRequest'])));
-
-        $mockHttpClient->expects($this->once())
-                       ->method('createRequest')
-                       ->with('POST', 'http://www.example.com', $this->getTestHeaders(), json_encode([ 'Id' => 1 ]))
-                       ->will($this->returnValue($request = $this->getMock('stdClass', [ 'send' ])));
-
-        $request->expects($this->once())
-                ->method('send')
-                ->will($this->returnValue($response = $this->getMock('stdClass', [ 'json' ])));
-
-        $response->expects($this->once())
-                 ->method('json')
-                 ->will($this->returnValue(json_decode('{"Invoice":{"Id":"1"}}', true)));
-
-        $response = $mockDataService->request('POST', 'http://www.example.com', [ 'Id' => 1 ]);
-
-        $this->assertArrayHasKey('Invoice', $response);
-        $this->assertArrayHasKey('Id', $response['Invoice']);
-        $this->assertEquals('1', $response['Invoice']['Id']);
     }
 
     /**

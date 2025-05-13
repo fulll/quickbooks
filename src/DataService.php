@@ -357,7 +357,7 @@ class DataService
     {
         $client = $this->createHttpClient();
 
-        $headers += $this->getHeaders($method, $uri);
+        $headers = array_merge($headers, $this->getHeaders($method, $uri));
 
         if ($body !== null && is_array($body)) {
             $body = json_encode($body);
